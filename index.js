@@ -476,7 +476,7 @@ class Doorbot {
             return self._initAlarmConnection(alarmDevice, (err) => {
                 if (err) return callback(err, alarmDevice);
 
-                self.sendAlarmMode(alarmDevice, alarmPanelId, alarmMode, bypassedSensors, callback);
+                self.setAlarmMode(alarmDevice, alarmPanelId, alarmMode, bypassedSensors, callback);t
             });
         }
 
