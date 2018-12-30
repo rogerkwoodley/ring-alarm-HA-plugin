@@ -13,7 +13,9 @@ Installation
 Usage
 -----
 
-    Look at mqttAlarm.js for a proof of concept that will work with MQTT discovery on Home Assistant and add the main alarm status and any contact or motion sensors to your HA UI.  Just update the mqtt server address to match yours.  Currently monitors the status of sensors as long as this script is running.
+    Look at mqttAlarm.js for a proof of concept that will work with MQTT discovery on Home Assistant and add the main 
+    alarm status and any contact or motion sensors to your HA UI.  Just update the mqtt server address to match yours.  
+    Currently monitors the status of sensors as long as this script is running.
     
 To Dos
 * Add alarm status updates to ongoing monitoring.
