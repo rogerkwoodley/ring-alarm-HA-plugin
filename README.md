@@ -7,55 +7,18 @@ this package deals with Ring's alarm station.
 Installation
 ------------
 
-    npm install ring-alarm
-
+    clone this github
+    npm install mqtt async ring-alarm
 
 Usage
 -----
 
-    const ring = RingAPI({
-      email: 'user@example.com'
-      password: 'secret'
-    });
-
-    // get list of stations associated with the account
-    ring.stations((err, stations) => {
-      if (err) ...;
-      
-      stations.forEach((station) => {
-        // get devices associated with each station
-        ring.getAlarmDevices(station, (err, station, message) => {
-          if (err) ...;
-
-          message.body.forEach((device) => {
-          // get properties associated with each device
-
-            ...
-          });
-        });
-
-        // register for DataUpdate messages
-        ring.setAlarmCallback(station, 'DataUpdate', (err, station, message) => {
-          if (err) ...;
-
-          ...
-        });
-
-        // set alarm mode
-        //   panelId: `zid` property of security-panel device
-        //   mode: 'all', 'some', 'none'
-        //   bypassSensorIs: an array of `zid` properties of sensor.* devices
-        ring.setAlarmMode(station, panelId, mode, bypassSensorIds, (err, station, message) => {
-          if (err) ...;
-
-          ...
-        });
-
-        // done getting information about station
-        ring.closeAlarmCollection(station);
-      });
-    });
-
+    Look at mqttAlarm.js for a proof of concept that will work with MQTT discovery on Home Assistant and add the main alarm status and any contact or motion sensors to your HA UI.  Just update the mqtt server address to match yours.  Currently monitors the status of sensors as long as this script is running.
+    
+To Dos
+* Add alarm status updates to ongoing monitoring.
+* Initiate alarm staus changes on discovered alarm devices from HA.
+    
 # Many Thanks
 Many thanks to [davglass](https://github.com/davglass) author of
 [doorbot](https://github.com/davglass/doorbot).
