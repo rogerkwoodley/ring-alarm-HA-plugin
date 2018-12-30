@@ -59,8 +59,8 @@ ring.stations((err, stations) => {
         return fetch(station, callback);
       }
 	message.body.forEach((device) => {
-		var n = device.general.v2.name;
-		var sensor_name = n.replace(/\s/g,'_');
+		var sensor_name = device.general.v2.zid
+//		console.log(JSON.stringify(device,null,2));
 		console.log('homeassistant/binary_sensor/alarm/'+sensor_name+'/config');
 		if (device.general.v2.deviceType === 'sensor.motion') {
 			const config_topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/config';
@@ -80,6 +80,32 @@ ring.stations((err, stations) => {
 					};
 			console.log(JSON.stringify(message));
 			client.publish(topic, JSON.stringify(message));
+		}
+		if (device.general.v2.deviceType === 'security-panel') {
+			const topic = 'homeassistant/alarm_control_panel/alarm/'+sensor_name+'/config';
+			const message = { name  : device.general.v2.name
+					, state_topic : 'home/alarm/state'
+					, command_topic : 'home/alarm/command'
+					, payload_disarm : 'none'
+					, payload_arm_home : 'some'
+					, payload_arm_away : 'all'
+					};
+			console.log(JSON.stringify(message));
+			client.publish(topic, JSON.stringify(message));
+			var state = 'disarmed'
+			switch (device.device.v1.mode) {
+				case 'none':
+					break;
+				case 'some':
+					state = 'armed_home';
+					break;
+				case 'all':
+					state = 'armed_away';
+					break;
+				default:
+					state = '';
+			}
+			client.publish('home/alarm/state',state);
 		}
       });
       ring.setAlarmCallback(station, 'DataUpdate', (err, station, message) => {
@@ -121,8 +147,7 @@ ring.stations((err, stations) => {
         if (info.tamperStatus) update.statusTampered = (info.tamperStatus === 'ok') ? 'NOT_TAMPERED' : 'TAMPERED';
 
         console.log(JSON.stringify({ info, context, update }, null, 2));
-	const n = message.context.affectedEntityName;
-	var sensor_name = n.replace(/\s/g,'_');
+	var sensor_name = message.context.affectedEntityId;
 	status = update.faulted;
 	const topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/state';
 	client.publish(topic,status);
