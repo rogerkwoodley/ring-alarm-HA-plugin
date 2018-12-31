@@ -1,17 +1,18 @@
-Ring.com Alarm Home Assistant Plugin
+Ring Alarm Home Assistant Plugin
 =====================
 This package is based on Dav Glass' [doorbot](https://github.com/davglass/doorbot) package and Homespun's ring-alarm fork (https://github.com/homespun/ring-alarm) and adapted to work with Home Assistant
+
+This code is mostly derivative of the aforementioned repos.  I just added some extras around MQTT discovery with HA since I'm too much of a novice to rewrite this as a true HA plugin.
 
 Installation
 ------------
 
-    clone this github
-    npm install mqtt async ring-alarm
+Clone this github
+npm install mqtt async ring-alarm
+Add your Ring credentials to either test.js or mqttAlarm.js (or set the environmental variables for RING_USERNAME and RING_PASSPHRASE)
+Set the mqtt server in mqttAlarm.js to your MQTT instance (whether the internal HA broker or otherwise - I use an extenral one)
+```node mqttAlarm.js```
 
-Usage
------
-
-Look at mqttAlarm.js for a proof of concept that will work with MQTT discovery on Home Assistant and add the main alarm status and any contact or motion sensors to your HA UI.  Just update the mqtt server address to match yours.  Currently monitors the status of sensors as long as this script is running.
 
 Features:
 * Works with MQTT discovery in Home Assistant
@@ -19,10 +20,11 @@ Features:
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
 
 To Dos
-* Add alarm status updates to ongoing monitoring.
+* Add real-time alarm status updates to ongoing monitoring.
 * Allow alarm to be set from HA.
 * Change alarm siren/voice prompt volumes from HA.
-    
+* Verify that script will re-initiate callbacks for status updates if/when socket is terminated by server.
+
 # Recognition
 Many thanks to [davglass](https://github.com/davglass) author of
 [doorbot](https://github.com/davglass/doorbot).
