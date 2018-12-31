@@ -1,4 +1,4 @@
-Ring.com Alarm API
+Ring.com Alarm Home Assistant Plugin
 =====================
 This package is based on Dav Glass' [doorbot](https://github.com/davglass/doorbot) package and Homespun's ring-alarm fork (https://github.com/homespun/ring-alarm) and adapted to work with Home Assistant
 
