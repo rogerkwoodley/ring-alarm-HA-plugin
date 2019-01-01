@@ -10,7 +10,7 @@ Installation
 Clone this github
 npm install mqtt async ring-alarm
 Add your Ring credentials to either test.js or mqttAlarm.js (or set the environmental variables for RING_USERNAME and RING_PASSPHRASE)
-Set the mqtt server in mqttAlarm.js to your MQTT instance (whether the internal HA broker or otherwise - I use an extenral one)
+Set the mqtt server in mqttAlarm.js to your MQTT instance (whether the internal HA broker or otherwise - I use an external one)
 ```node mqttAlarm.js```
 
 
@@ -18,9 +18,9 @@ Features:
 * Works with MQTT discovery in Home Assistant
 * Automagically adds all your contact sensors, motion sensors, and alarm units in HA
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
+* Alarm sensor reflects current status of alarm (when set by Ring app)
 
 To Dos
-* Add real-time alarm status updates to ongoing monitoring.
 * Allow alarm to be set from HA.
 * Change alarm siren/voice prompt volumes from HA.
 * Verify that script will re-initiate callbacks for status updates if/when socket is terminated by server.
