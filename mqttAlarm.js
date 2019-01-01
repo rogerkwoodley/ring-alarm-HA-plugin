@@ -15,8 +15,7 @@ const client = mqtt.connect('mqtt://192.168.1.8');
 client.on('connect', function () { 
 	client.subscribe('homeassistant', function (err) {
 		if (!err) { 
-			console.log('mqtt connected and subscribed');
-			client.publish('homeassistant','i am here');
+			console.log('Connected to mqtt and subscribed to homeassistant ch annel');
 			}
 		})
 })
@@ -86,9 +85,6 @@ ring.stations((err, stations) => {
 			const message = { name  : device.general.v2.name
 					, state_topic : 'home/alarm/state'
 					, command_topic : 'home/alarm/command'
-					, payload_disarm : 'none'
-					, payload_arm_home : 'some'
-					, payload_arm_away : 'all'
 					};
 			console.log(JSON.stringify(message));
 			client.publish(topic, JSON.stringify(message));
@@ -104,6 +100,7 @@ ring.stations((err, stations) => {
 					break;
 				default:
 					state = '';
+					break;
 			}
 			client.publish('home/alarm/state',state);
 		}
@@ -115,9 +112,8 @@ ring.stations((err, stations) => {
             , update = {};
 
         console.log('DataUpdate: errP=' + (!!err) + ' station=' + station.location_id + ' datatype=' + message.datatype);
-	console.log(JSON.stringify(message,null,2));
         if (err) oops(err.toString());
-
+ 
         if (message.datatype === 'HubDisconnectionEventType') {
           console.log(JSON.stringify({ info, context, update: { statusActive: false } }, null, 2));
         }
@@ -126,30 +122,63 @@ ring.stations((err, stations) => {
           return console.log('message=' + JSON.stringify(message, null, 2));
         }
 
-        if (info.deviceType === 'hub.redsky') {
-          console.log(JSON.stringify({ info, context, update: { deviceId: station.location_id, statusActive: true } }, null, 2));
-        }
+//        if (info.deviceType === 'hub.redsky') {
+//          console.log(JSON.stringify({ info, context, update: { deviceId: station.location_id, statusActive: true } }, null, 2));
+//       }
 
-        if (!((info.deviceType === 'sensor.contact') || (info.deviceType === 'sensor.motion'))) {
-          return console.log('deviceType=' + info.deviceType + ' ' + JSON.stringify({ info, context }, null, 2));
-        }
-
+/*        if (!((info.deviceType === 'sensor.contact') || (info.deviceType === 'sensor.motion'))) {
+	         return console.log('deviceType=' + info.deviceType + ' ' + JSON.stringify({ info, context }, null, 2));
+	}
+*/
         update.deviceId = info.zid;
 
         info.lastCommTime = new Date(info.lastCommTime).getTime();
         if (!isNaN(info.lastCommTime)) {
           // set device.polling.nextExpectedWakeup = info.lastCommTime + device.polling.pollInterval
         }
+	//Construct topic & message to post to MQTT
 
-        if (info.deviceType === 'sensor.contact') update.faulted = context.faulted ? 'ON' : 'OFF';
-        else if (info.deviceType === 'sensor.motion') update.faulted = context.faulted ? 'ON' : 'OFF';
+	var sensor_name = message.context.affectedEntityId;
+	var topic = '';
+	var status = '';
+	if (info.deviceType === 'security-panel') {
+		mode = message.body[0].device.v1.mode;
+		topic = 'home/alarm/state';
+		switch (mode) {
+			case 'none':
+				status = 'disarmed';
+				break;
+			case 'some':
+				status = 'armed_home';
+				break;
+			case 'all':
+				status = 'armed_away';
+				break;
+			default:
+				status = '';
+				break;
+			}
+		console.log(status);
+		return client.publish(topic, status);
+	}
+        if (info.deviceType === 'sensor.contact') {
+		update.faulted = context.faulted ? 'ON' : 'OFF';
+		topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/state';
+		status = update.faulted;
+		return client.publish(topic, status);
+	};
+        if (info.deviceType === 'sensor.motion') {
+		update.faulted = context.faulted ? 'ON' : 'OFF';
+		topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/state';
+		status = update.faulted;
+		return client.publish(topic, status);
+	};
+	
 
         if (info.tamperStatus) update.statusTampered = (info.tamperStatus === 'ok') ? 'NOT_TAMPERED' : 'TAMPERED';
 
-        console.log(JSON.stringify({ info, context, update }, null, 2));
-	var sensor_name = message.context.affectedEntityId;
-	status = update.faulted;
-	const topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/state';
+//        console.log(JSON.stringify({ info, context, update }, null, 2));
+
 	client.publish(topic,status);
       });
     });
