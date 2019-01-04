@@ -10,15 +10,16 @@
 
 const RingAPI = require('.');
 const mqtt = require('mqtt')
-const client = mqtt.connect(process.env.MQTT);
+const client = mqtt.connect(process.env.MQTT,{will:{topic:'home/alarm/connected', payload: 'OFF'}});
 var security_panel_zid = ''
 client.on('connect', function () { 
+	client.publish('home/alarm/connected','ON',[retain = true]);
 	client.subscribe('homeassistant', function (err) {
 		if (!err) { 
 			console.log('Connected to mqtt and subscribed to homeassistant channel');
 			}
 		})
-	client.subscribe('home/alarm/#');
+	client.subscribe('home/alarm/#', function (err) {});
 })
 
 client.on('message', function(topic, message) {
@@ -88,6 +89,9 @@ ring.stations((err, stations) => {
 			const config_topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/config';
 			const message = { name	: device.general.v2.name
 					, device_class : 'motion'
+					, availability_topic : 'home/alarm/connected'
+					, payload_available : 'ON'
+					, payload_not_available : 'OFF'
 					};
 			console.log(JSON.stringify(message));
 			client.publish(config_topic, JSON.stringify(message));
@@ -99,6 +103,9 @@ ring.stations((err, stations) => {
 			const topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/config';
 			const message = { name	: device.general.v2.name
 					, device_class : 'door'
+					, availability_topic : 'home/alarm/connected'
+					, payload_available : 'ON'
+					, payload_not_available : 'OFF'
 					};
 			console.log(JSON.stringify(message));
 			client.publish(topic, JSON.stringify(message));
@@ -109,6 +116,9 @@ ring.stations((err, stations) => {
 			const message = { name  : device.general.v2.name
 					, state_topic : 'home/alarm/state'
 					, command_topic : 'home/alarm/command'
+					, availability_topic : 'home/alarm/connected'
+					, payload_available : 'ON'
+					, payload_not_available : 'OFF'
 					};
 			console.log(JSON.stringify(message));
 			client.publish(topic, JSON.stringify(message));
