@@ -7,10 +7,10 @@ This code is mostly derivative of the aforementioned repos.  I just added some e
 Installation
 ------------
 
-Clone this github
-npm install mqtt async ring-alarm
-Add your Ring credentials to either test.js or mqttAlarm.js (or set the environmental variables for RING_USERNAME and RING_PASSPHRASE)
-Set the enviromental variable MQTT to your MQTT broker (whether the internal HA one or an external one)
+* Clone this github
+* npm install mqtt async ring-alarm
+* Add your Ring credentials to either test.js or mqttAlarm.js (or set the environmental variables for RING_USERNAME and * RING_PASSPHRASE)
+* Set the enviromental variable MQTT to your MQTT broker (whether the internal HA one or an external one)
 ```node mqttAlarm.js```
 
 
