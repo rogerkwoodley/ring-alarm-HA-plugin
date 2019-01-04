@@ -10,20 +10,45 @@
 
 const RingAPI = require('.');
 const mqtt = require('mqtt')
-const client = mqtt.connect('mqtt://192.168.1.8');
-
+const client = mqtt.connect(process.env.MQTT);
+var security_panel_zid = ''
 client.on('connect', function () { 
 	client.subscribe('homeassistant', function (err) {
 		if (!err) { 
-			console.log('Connected to mqtt and subscribed to homeassistant ch annel');
+			console.log('Connected to mqtt and subscribed to homeassistant channel');
 			}
 		})
+	client.subscribe('home/alarm/#');
+})
+
+client.on('message', function(topic, message) {
+	if (topic === 'home/alarm/command') {
+		var alarm_mode = '';
+		console.log(message.toString());
+		switch (message.toString()) {
+			case 'DISARM': 
+				alarm_mode = 'none';
+				break;
+			case 'ARM_HOME':
+				alarm_mode = 'some';
+				break;
+			case 'ARM_AWAY':
+				alarm_mode = 'all';
+				break;
+			default:
+				break;
+		}
+		ring.stations((err, station) => {
+			ring.setAlarmMode(station[0],security_panel_zid,alarm_mode,[],(oops) => {});
+		})
+	}
 })
 
 const ring = RingAPI({
   email: process.env.RING_USERNAME || 'abc@gmail.com',
   password: process.env.RING_PASSPHRASE || 'mypassword',
 });
+
 
 const oops = (s) => {
   console.log(s);
@@ -59,8 +84,6 @@ ring.stations((err, stations) => {
       }
 	message.body.forEach((device) => {
 		var sensor_name = device.general.v2.zid
-//		console.log(JSON.stringify(device,null,2));
-		console.log('homeassistant/binary_sensor/alarm/'+sensor_name+'/config');
 		if (device.general.v2.deviceType === 'sensor.motion') {
 			const config_topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/config';
 			const message = { name	: device.general.v2.name
@@ -81,6 +104,7 @@ ring.stations((err, stations) => {
 			client.publish(topic, JSON.stringify(message));
 		}
 		if (device.general.v2.deviceType === 'security-panel') {
+			security_panel_zid = sensor_name;
 			const topic = 'homeassistant/alarm_control_panel/alarm/'+sensor_name+'/config';
 			const message = { name  : device.general.v2.name
 					, state_topic : 'home/alarm/state'
