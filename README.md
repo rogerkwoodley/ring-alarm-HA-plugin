@@ -20,10 +20,11 @@ Features:
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
 * Alarm sensor reflects current status of alarm (when set by Ring app)
 * Can set alarm mode directly from alarm sensor 
+* All sensors will show "Unavailable" if MQTT connection is lost
 
 To Dos
 * Change alarm siren/voice prompt volumes from HA.
-* Verify that script will re-initiate callbacks for status updates if/when socket is terminated by server.
+* Verify that script will re-initiate callbacks for status updates if/when web socket with Ring API is terminated.
 
 # Recognition
 Many thanks to [davglass](https://github.com/davglass) author of
