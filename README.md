@@ -10,9 +10,10 @@ Installation/Usage
 * Clone this github
 * npm install mqtt async ring-alarm
 * Add your Ring credentials and MQTT broker address to mqttAlarm.sh
-  chmod a+x mqttAlarm.sh
-  ./mqttAlarm.sh
-
+```
+chmod a+x mqttAlarm.sh
+./mqttAlarm.sh
+```
 
 Features:
 * Works with MQTT discovery in Home Assistant
