@@ -4,14 +4,14 @@ This package is based on Dav Glass' [doorbot](https://github.com/davglass/doorbo
 
 This code is mostly derivative of the aforementioned repos.  I just added some extras around MQTT discovery with HA since I'm too much of a novice to rewrite this as a true HA plugin.
 
-Installation
+Installation/Usage
 ------------
 
 * Clone this github
 * npm install mqtt async ring-alarm
 * Add your Ring credentials and MQTT broker address to mqttAlarm.sh
-* ```chmod a+x mqttAlarm.sh
-* ```./mqttAlarm.sh
+```chmod a+x mqttAlarm.sh
+```./mqttAlarm.sh
 
 Features:
 * Works with MQTT discovery in Home Assistant
