@@ -18,7 +18,7 @@ Features:
 * Works with MQTT discovery in Home Assistant
 * Automagically adds all your contact sensors, motion sensors, and alarm units in HA
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
-* Alarm sensor reflects current status of alarm (when set by Ring app)
+* Alarm panel reflects current alarm mode (based on updates received from Ring API)
 * Can set alarm mode directly from alarm sensor 
 * All sensors will show "Unavailable" if MQTT connection is lost
 
