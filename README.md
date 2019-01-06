@@ -15,7 +15,7 @@ chmod a+x mqttAlarm.sh
 ./mqttAlarm.sh
 ```
 
-Features:
+## Features:
 * Works with MQTT discovery in Home Assistant
 * Automagically adds all your contact sensors, motion sensors, and alarm units as sensors in HA
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
