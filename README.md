@@ -1,4 +1,4 @@
-Ring Alarm Home Assistant Plugin
+Ring Alarm MQTT Alarm Panel Home Assistant Integrationn
 =====================
 This package is based on Dav Glass' [doorbot](https://github.com/davglass/doorbot) package and Homespun's ring-alarm fork (https://github.com/homespun/ring-alarm) and adapted to work with Home Assistant
 
@@ -9,22 +9,18 @@ Installation
 
 * Clone this github
 * npm install mqtt async ring-alarm
-* Add your Ring credentials to either test.js or mqttAlarm.js (or set the environmental variables for RING_USERNAME and * RING_PASSPHRASE)
-* Set the enviromental variable MQTT to your MQTT broker (whether the internal HA one or an external one)
-```node mqttAlarm.js```
-
+* Add your Ring credentials and MQTT broker address to mqttAlarm.sh
+* ```chmod a+x mqttAlarm.sh
+* ```./mqttAlarm.sh
 
 Features:
 * Works with MQTT discovery in Home Assistant
-* Automagically adds all your contact sensors, motion sensors, and alarm units in HA
+* Automagically adds all your contact sensors, motion sensors, and alarm units as sensors in HA
 * Updates contact/motion sensor status in real-time as long as mqttAlarm.js script is running
 * Alarm panel reflects current alarm mode (based on updates received from Ring API)
-* Can set alarm mode directly from alarm sensor 
+* Set alarm mode directly from alarm sensor 
 * All sensors will show "Unavailable" if MQTT connection is lost
 
-To Dos
-* Change alarm siren/voice prompt volumes from HA.
-* Verify that script will re-initiate callbacks for status updates if/when web socket with Ring API is terminated.
 
 # Recognition
 Many thanks to [davglass](https://github.com/davglass) author of
