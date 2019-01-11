@@ -83,7 +83,8 @@ ring.stations((err, stations) => {
         console.log(err.toString() + '\n\n');
         return fetch(station, callback);
       }
-	message.body.forEach((device) => {
+	client.publish('home/alarm/connected','ON',[retain = true]);
+	    message.body.forEach((device) => {
 		var sensor_name = device.general.v2.zid
 		if (device.general.v2.deviceType === 'sensor.motion') {
 			const config_topic = 'homeassistant/binary_sensor/alarm/'+sensor_name+'/config';
@@ -133,7 +134,7 @@ ring.stations((err, stations) => {
 					state = 'armed_away';
 					break;
 				default:
-					state = '';
+					state = 'disarmed';
 					break;
 			}
 			client.publish('home/alarm/state',state);
